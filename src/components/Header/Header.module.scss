@@ -1,0 +1,29 @@
+@import "../../app/styles/variables.scss";
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 100%;
+    padding: 20px;
+    .headerLeft {
+        .logo {
+            font-family: var(--font-alfa), sans-serif;
+            color: $primary-color;
+            font-size: 24px;
+        }
+    }
+
+    .headerRight {
+        .headerButton {
+            text-decoration: none;
+            font-weight: 600;
+            background-color: $secondary-color;
+            padding: 7px 20px;
+            color: $light-color;
+            border-radius: 5px;
+            font-size: 18px;
+        }
+    }
+}
