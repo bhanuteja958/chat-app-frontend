@@ -1,17 +1,27 @@
-import React from "react";
+import React, { FC } from "react";
 import styles from "./Header.module.scss";
 import Link from "next/link";
 
-const Header = () => {
+interface iHeaderProps {
+    isLoginPage?: boolean;
+}
+
+const Header: FC<iHeaderProps> = ({ isLoginPage }) => {
     return (
         <header className={styles.header}>
             <div className={styles.headerLeft}>
-                <p className={styles.logo}>YouTalk</p>
+                <Link href="/" className={styles.logo}>
+                    YouTalk
+                </Link>
             </div>
             <nav className={styles.headerRight}>
-                <Link href={"/"} className={styles.headerButton}>
-                    Login
-                </Link>
+                {!isLoginPage ? (
+                    <Link href={"/login"} className={styles.headerButton}>
+                        Login
+                    </Link>
+                ) : (
+                    ""
+                )}
             </nav>
         </header>
     );
