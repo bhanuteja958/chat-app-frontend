@@ -2,6 +2,7 @@ import { ChangeEvent, FC, FocusEvent } from "react";
 import styles from "./InputWithLabel.module.scss";
 
 interface iInputWithLabelProps {
+    name: string;
     label: string;
     value: string;
     type: React.HTMLInputTypeAttribute;
@@ -11,6 +12,7 @@ interface iInputWithLabelProps {
     disabled?: boolean;
 }
 const InputWithLabel: FC<iInputWithLabelProps> = ({
+    name,
     label,
     value,
     type,
@@ -25,7 +27,7 @@ const InputWithLabel: FC<iInputWithLabelProps> = ({
                 {label}
             </label>
             <input
-                name={label}
+                name={name}
                 id={label}
                 type={type}
                 value={value}

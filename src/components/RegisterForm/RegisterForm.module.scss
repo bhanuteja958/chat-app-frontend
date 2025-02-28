@@ -1,0 +1,38 @@
+@import "../../app/styles/variables.scss";
+
+.registerFormContainer {
+    background-color: $light-color;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+    width: 350px;
+    margin: auto;
+    margin-top: 50px;
+    padding: 20px;
+
+    .registerForm {
+        display: flex;
+        flex-direction: column;
+        row-gap: 20px;
+
+        .registerBtn {
+            background-color: $secondary-color;
+            color: $light-color;
+            display: block;
+            width: 100%;
+            font-size: 18px;
+            font-weight: 500;
+            margin-top: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            border: 0;
+            padding: 5px;
+        }
+    }
+
+    .loginCta {
+        margin-top: 10px;
+        text-align: center;
+        .ctaLink {
+            color: darken($color: $primary-color, $amount: 20);
+        }
+    }
+}

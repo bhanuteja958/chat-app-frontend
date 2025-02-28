@@ -8,17 +8,20 @@ import Link from "next/link";
 const inputDetails: iInputInfo[] = [
     {
         name: "email",
+        label: "Email",
         type: "email",
+        inputType: "input",
         defaultValue: "",
         required: true,
         validations: {
             email: true,
-            required: true,
         },
     },
     {
         name: "password",
+        label: "Password",
         type: "password",
+        inputType: "input",
         defaultValue: "",
         required: true,
         validations: {
@@ -45,10 +48,11 @@ const LoginForm: FC<{}> = () => {
                 }}
             >
                 {inputDetails.map((inputInfo) => {
-                    const { name, type } = inputInfo;
+                    const { name, label, type } = inputInfo;
                     return (
                         <InputWithLabel
-                            label={name}
+                            name={name}
+                            label={label}
                             value={values[name]}
                             type={type}
                             changeHandler={changeHandler}
@@ -64,7 +68,7 @@ const LoginForm: FC<{}> = () => {
             </form>
             <p className={styles.registerCta}>
                 Don't have an account?{" "}
-                <Link href={"/"} className={styles.ctaLink}>
+                <Link href={"/register"} className={styles.ctaLink}>
                     Register
                 </Link>
             </p>

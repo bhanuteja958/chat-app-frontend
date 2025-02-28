@@ -7,6 +7,8 @@ declare global {
 
     interface iInputInfo {
         name: string;
+        label: string;
+        inputType: string;
         type: HTMLInputTypeAttribute;
         defaultValue: string;
         required: true;

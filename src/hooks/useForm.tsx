@@ -16,13 +16,13 @@ const validateInput = (
             }
             break;
         case "maxLength":
-            if (value.length >= validationValue) {
+            if (value.length > validationValue) {
                 error = `Maximum of ${validationValue} characters allowed`;
                 isValid = false;
             }
             break;
         case "minLength":
-            if (value.length <= validationValue) {
+            if (value.length < validationValue) {
                 error = `Minimum of ${validationValue} characters required `;
                 isValid = false;
             }
@@ -52,17 +52,20 @@ const useForm = (inputsInfo: iInputInfo[]) => {
     const [errors, setErrors] = useState<Record<string, any>>(() => {
         const initialErrors: Record<string, string> = {};
         inputsInfo.forEach((input: iInputInfo) => {
-            initialErrors[input.name] = input.defaultValue;
+            initialErrors[input.name] = "";
         });
         return initialErrors;
     });
 
-    const otherInputsInfo: Record<string, any> = {};
-    inputsInfo.forEach((input: iInputInfo) => {
-        otherInputsInfo[input.name] = {
-            required: input.required,
-            validations: input.validations,
-        };
+    const [otherInputsInfo] = useState<Record<string, any>>(() => {
+        const otherInfo: Record<string, any> = {};
+        inputsInfo.forEach((input: iInputInfo) => {
+            otherInfo[input.name] = {
+                required: input.required,
+                validations: input.validations,
+            };
+        });
+        return otherInfo;
     });
 
     const validate = (
@@ -87,7 +90,7 @@ const useForm = (inputsInfo: iInputInfo[]) => {
             executeValidations = value ? true : false;
         }
 
-        if (executeValidations) {
+        if (executeValidations && Object.entries(validations).length > 0) {
             isValidInput = Object.entries(validations).every(
                 ([validationKey, validationValue]) => {
                     const [isValid, error]: [boolean, string] = validateInput(
@@ -140,6 +143,19 @@ const useForm = (inputsInfo: iInputInfo[]) => {
         });
     };
 
+    const dateChangeHandler = (name: string, date: Date) => {
+        setValues((prevValues) => {
+            const newValues = { ...prevValues };
+            newValues[name] = date;
+            return newValues;
+        });
+        setErrors((prevErrors) => {
+            const newErrors = { ...prevErrors };
+            newErrors[name] = "";
+            return newErrors;
+        });
+    };
+
     const blurHandler = (
         event: FocusEvent<
             HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
@@ -149,7 +165,14 @@ const useForm = (inputsInfo: iInputInfo[]) => {
         validate(name, value, otherInputsInfo[name].validations);
     };
 
-    return { values, errors, changeHandler, blurHandler, validateForm };
+    return {
+        values,
+        errors,
+        dateChangeHandler,
+        changeHandler,
+        blurHandler,
+        validateForm,
+    };
 };
 
 export default useForm;
