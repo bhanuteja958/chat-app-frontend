@@ -1,0 +1,158 @@
+@import "../../app/styles/variables.scss";
+
+.conversationInterfaceContainer {
+    height: 100vh;
+    background-image: url("/pattern.png");
+    background-repeat: repeat;
+    background-size: 40px;
+    background-color: rgba(255, 255, 255, 0.7);
+    background-blend-mode: overlay;
+
+    .conversationInterfaceHeader {
+        display: flex;
+        width: 100%;
+        align-items: center;
+        justify-content: space-between;
+        padding: 15px;
+        border-bottom: 0.5px solid $primary-color-extreme-dark;
+        background-color: $light-color;
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        .chatEntity {
+            display: flex;
+            height: 55px;
+            column-gap: 10px;
+            .entityPicContainer {
+                position: relative;
+                .entityPlaceholderPic {
+                    .personIcon {
+                        background-color: lighten(
+                            $color: $primary-color,
+                            $amount: 12
+                        );
+                        border: 3px solid $primary-color-light;
+                        border-radius: 50%;
+                        width: 60px;
+                        height: 60px;
+                        fill: $light-color;
+                    }
+                }
+            }
+
+            .chatEntityInfo {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+
+                .entityName {
+                    font-size: 20px;
+                    font-weight: 500;
+                    text-transform: capitalize;
+                }
+
+                .onlineStatus {
+                    font-size: 16px;
+                    color: $primary-color-extreme-dark;
+                }
+            }
+        }
+    }
+
+    .messagesBlock {
+        display: flex;
+        flex-direction: column;
+        row-gap: 20px;
+        padding: 5px 15px;
+        height: calc(100% - 155px);
+        overflow: auto;
+
+        .messageOuterContainer {
+            display: flex;
+            width: 100%;
+
+            .messageInnerContainer {
+                width: 250px;
+                .userName {
+                    font-size: 12px;
+                    font-weight: 500;
+                    color: $dark-color-light;
+                }
+                .message {
+                    font-size: 16px;
+                    padding: 10px;
+                    margin-top: 5px;
+                }
+
+                .userMessage {
+                    background-color: $primary-color-light;
+                    color: $dark-color;
+                    border-radius: 15px 5px 15px 5px;
+                }
+
+                .friendMessage {
+                    background-color: $secondary-color-light;
+                    color: $dark-color;
+                    border-radius: 5px 15px 5px 15px;
+                }
+            }
+        }
+
+        .userMessageContainer {
+            justify-content: right;
+        }
+
+        .friendMessageContainer {
+            justify-content: left;
+        }
+    }
+
+    .conversationInterfaceFooter {
+        position: fixed;
+        z-index: 2;
+        bottom: 0;
+        background-color: white;
+        padding: 10px;
+        box-shadow: 0 0px 4px rgba(0, 0, 0, 0.2);
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .messageInputContainer {
+            width: 100%;
+            background-color: lighten($light-color-dark, 15);
+            padding: 5px 10px;
+            display: flex;
+            align-items: center;
+            border-radius: 30px;
+            column-gap: 5px;
+
+            .messageInput {
+                width: calc(100% - 40px);
+                border: 0;
+                outline: none;
+                background-color: transparent;
+                font-size: 16px;
+                padding: 5px;
+                resize: none;
+                overflow: auto;
+            }
+
+            .sendButton {
+                width: 35px;
+                height: 35px;
+                border-radius: 50%;
+                border: 0;
+                background-color: $secondary-color;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                .sendIcon {
+                    fill: $light-color;
+                }
+            }
+        }
+    }
+}
