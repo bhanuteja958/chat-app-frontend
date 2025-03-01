@@ -21,6 +21,12 @@ declare global {
         minLength?: number;
         required?: boolean;
     }
+
+    interface iDropdownItem {
+        name: string;
+        link?: string;
+        handler?: (...args: [any]) => any;
+    }
 }
 
 export {};

@@ -16,3 +16,16 @@ export const formatDate = (date: Date, format: string) => {
             return "";
     }
 };
+
+export const debounce = (fn: (...args: any[]) => any, interval: number) => {
+    let timeout = null;
+    return (...args: any[]) => {
+        if (timeout) {
+            clearTimeout(timeout);
+        }
+
+        timeout = setTimeout(() => {
+            fn(...args);
+        }, interval);
+    };
+};

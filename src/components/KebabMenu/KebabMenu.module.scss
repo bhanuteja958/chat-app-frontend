@@ -1,0 +1,46 @@
+@import "../../app/styles/variables.scss";
+
+.kebabMenuContainer {
+    position: relative;
+
+    .kebabIcon {
+        height: 35px;
+        width: auto;
+    }
+
+    .kebabDropdown {
+        background-color: $light-color;
+        box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+        position: absolute;
+        right: 0;
+        z-index: 2;
+        list-style-type: none;
+        border-radius: 5px;
+        transform-origin: top right;
+        animation: fadeIn 0.2s ease-in-out;
+
+        .kebabDropdownItem {
+            padding: 7px;
+            width: 150px;
+            font-size: 18px;
+            font-weight: 500;
+
+            .kebabDropdownLink {
+                text-decoration: none;
+                color: $dark-color;
+            }
+        }
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}

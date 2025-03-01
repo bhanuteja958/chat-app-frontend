@@ -1,0 +1,82 @@
+@import "../../app/styles/variables.scss";
+
+.chatEntityCardContainer {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    column-gap: 10px;
+    padding: 15px 20px;
+    border-bottom: 0.5px solid $light-color-dark;
+
+    .entityPicContainer {
+        position: relative;
+        .entityPlaceholderPic {
+            .personIcon {
+                background-color: lighten($color: $primary-color, $amount: 12);
+                border: 3px solid $primary-color-light;
+                border-radius: 50%;
+                width: 65px;
+                height: 65px;
+                fill: $light-color;
+            }
+        }
+
+        .onlineIndicator {
+            background-color: $success-color;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            position: absolute;
+            right: 5px;
+            bottom: 10px;
+            z-index: 2;
+        }
+    }
+
+    .entityChatInfo {
+        display: flex;
+        justify-content: space-between;
+        height: 60px;
+        width: calc(100% - 75px);
+        .chatInfoLeft {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            .entityName {
+                font-size: 20px;
+                font-weight: 500;
+                text-transform: capitalize;
+            }
+
+            .latestChatMessageWithEntity {
+                font-size: 16px;
+                color: $primary-color-extreme-dark;
+            }
+        }
+
+        .chatInfoRight {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            justify-content: space-between;
+            .lastSeenTime {
+                color: $primary-color-extreme-dark;
+                font-size: 16px;
+            }
+
+            .unseenMessageCount {
+                background-color: $secondary-color;
+                color: $light-color;
+                width: 25px;
+                height: 25px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 50%;
+                font-size: 14px;
+                font-weight: 500;
+                margin-bottom: 3px;
+            }
+        }
+    }
+}

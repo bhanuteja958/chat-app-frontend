@@ -1,0 +1,21 @@
+.searchInputContainer {
+    display: flex;
+    align-items: center;
+    column-gap: 5px;
+    background-color: #f5f5f5;
+    border-radius: 20px;
+    padding: 5px 10px;
+    .searchIcon {
+        width: 30px;
+        height: 30px;
+    }
+
+    .searchInput {
+        padding: 5px;
+        border: 0;
+        background-color: #f5f5f5;
+        font-size: 16px;
+        outline: none;
+        width: calc(100% - 35px);
+    }
+}
