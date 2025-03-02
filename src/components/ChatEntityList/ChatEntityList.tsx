@@ -1,32 +1,40 @@
 "use client";
-import { FC } from "react";
+import { FC, useMemo, useState } from "react";
 import ChatEntityCard from "../ChatEntityCard/ChatEntityCard";
 import styles from "./ChatEntityList.module.scss";
 import SearchInput from "../SearchInput/SearchInput";
 import { debounce } from "../../common/helper";
 import KebabMenu from "../KebabMenu/KebabMenu";
 import Close from "../SVG/Close";
-
-const dropDownList: iDropdownItem[] = [
-    {
-        name: "Users",
-        link: "/chat/users",
-    },
-    {
-        name: "Groups",
-        link: "/chat/groups",
-    },
-    {
-        name: "Settings",
-        link: "/profile",
-    },
-];
+import AddFriendModal from "../AddFriendModal/AddFriendModal";
 
 interface iChatEntityListProps {
     closeChatEntityList?: () => void;
 }
 
 const ChatEntityList: FC<iChatEntityListProps> = ({ closeChatEntityList }) => {
+    const [showAddFriendModal, setShowAddFriendModal] =
+        useState<boolean>(false);
+    const dropDownList: iDropdownItem[] = useMemo(
+        () => [
+            {
+                name: "Users",
+                link: "/chat/users",
+            },
+            {
+                name: "Add Friend",
+                handler: () => {
+                    setShowAddFriendModal(true);
+                },
+            },
+            {
+                name: "Settings",
+                link: "/profile",
+            },
+        ],
+        [],
+    );
+
     const filterEntities = (value: string) => {
         // yet to code functionality
     };
@@ -122,6 +130,15 @@ const ChatEntityList: FC<iChatEntityListProps> = ({ closeChatEntityList }) => {
                     latestMessage="Hello World"
                 />
             </div>
+            {showAddFriendModal ? (
+                <AddFriendModal
+                    closeHandler={() => {
+                        setShowAddFriendModal(false);
+                    }}
+                />
+            ) : (
+                ""
+            )}
         </section>
     );
 };

@@ -1,0 +1,42 @@
+@import "../../app/styles/variables.scss";
+
+.addFriendHeader {
+    padding: 10px;
+}
+
+.usersList {
+    width: 300px;
+    height: 300px;
+    overflow: auto;
+    .userCardContainer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px;
+
+        .userDetails {
+            display: flex;
+            align-items: center;
+            column-gap: 5px;
+
+            .userName {
+                font-size: 16px;
+                font-weight: 500;
+            }
+
+            .userEmail {
+                font-size: 12px;
+            }
+        }
+
+        .addButton {
+            padding: 3px;
+            background-color: $secondary-color;
+            color: $light-color;
+            border: 0;
+            outline: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    }
+}
