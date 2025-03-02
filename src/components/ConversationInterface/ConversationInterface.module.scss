@@ -50,10 +50,15 @@
             align-items: center;
             column-gap: 10px;
 
+            .friendIconContainer {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
             .friendsIcon {
                 width: 35px;
                 height: auto;
-                margin-bottom: 5px;
                 cursor: pointer;
             }
         }
