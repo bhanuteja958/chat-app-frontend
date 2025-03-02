@@ -1,8 +1,37 @@
+@import "../../app/styles/variables.scss";
+
 .chatEntityListContainer {
+    width: 100%;
+    height: 100vh;
+    overflow-x: hidden;
     .chatEntityListHeader {
         display: flex;
         padding: 10px;
         align-items: center;
         justify-content: space-between;
+        height: 70px;
+        border-bottom: 0.5px solid $primary-color-extreme-dark;
+
+        .chatEntityListHeaderLeft {
+            display: flex;
+            align-items: center;
+            column-gap: 10px;
+        }
+        .closeIconContainer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .closeIcon {
+            width: 30px;
+            height: auto;
+            cursor: pointer;
+        }
+    }
+
+    .chatEntityList {
+        height: calc(100% - 70px);
+        overflow: auto;
     }
 }

@@ -1,12 +1,14 @@
 @import "../../app/styles/variables.scss";
 
 .conversationInterfaceContainer {
+    width: 100%;
     height: 100vh;
     background-image: url("/pattern.png");
     background-repeat: repeat;
     background-size: 40px;
     background-color: rgba(255, 255, 255, 0.7);
     background-blend-mode: overlay;
+    overflow-x: hidden;
 
     .conversationInterfaceHeader {
         display: flex;
@@ -17,6 +19,7 @@
         border-bottom: 0.5px solid $primary-color-extreme-dark;
         background-color: $light-color;
         position: sticky;
+        height: 90px;
         top: 0;
         z-index: 2;
         .chatEntity {
@@ -57,6 +60,19 @@
                 }
             }
         }
+
+        .controls {
+            display: flex;
+            align-items: center;
+            column-gap: 10px;
+
+            .friendsIcon {
+                width: 35px;
+                height: auto;
+                margin-bottom: 5px;
+                cursor: pointer;
+            }
+        }
     }
 
     .messagesBlock {
@@ -64,7 +80,8 @@
         flex-direction: column;
         row-gap: 20px;
         padding: 5px 15px;
-        height: calc(100% - 155px);
+        height: calc(100% - 150px);
+        width: 100%;
         overflow: auto;
 
         .messageOuterContainer {
@@ -108,9 +125,7 @@
     }
 
     .conversationInterfaceFooter {
-        position: fixed;
-        z-index: 2;
-        bottom: 0;
+        height: 60px;
         background-color: white;
         padding: 10px;
         box-shadow: 0 0px 4px rgba(0, 0, 0, 0.2);

@@ -4,12 +4,14 @@ import Image from "next/image";
 import Person from "../SVG/Person";
 import KebabMenu from "../KebabMenu/KebabMenu";
 import Send from "../SVG/Send";
+import Friends from "../SVG/Friends";
 
 interface iConversationInterfaceProps {
     userPic: string;
     name: string;
     onlineStatus: string;
     lastSeenTime?: string;
+    showEntityListDrawer?: () => void;
 }
 
 const dropDownList: iDropdownItem[] = [];
@@ -28,32 +30,32 @@ const messages = [
     {
         content: "Hi bro how are you?",
         isUser: true,
-        id: 1,
+        id: 3,
     },
     {
         content: "I'm fine wbu?",
         isUser: false,
-        id: 2,
+        id: 4,
     },
     {
         content: "Hi bro how are you?",
         isUser: true,
-        id: 1,
+        id: 5,
     },
     {
         content: "I'm fine wbu?",
         isUser: false,
-        id: 2,
+        id: 6,
     },
     {
         content: "Hi bro how are you?",
         isUser: true,
-        id: 1,
+        id: 7,
     },
     {
         content: "I'm fine wbu?",
         isUser: false,
-        id: 2,
+        id: 8,
     },
 ];
 
@@ -62,6 +64,7 @@ const ConversationInterface: FC<iConversationInterfaceProps> = ({
     name,
     onlineStatus,
     lastSeenTime,
+    showEntityListDrawer,
 }) => {
     return (
         <section className={styles.conversationInterfaceContainer}>
@@ -85,13 +88,22 @@ const ConversationInterface: FC<iConversationInterfaceProps> = ({
                         </p>
                     </div>
                 </div>
-                <KebabMenu dropdownItems={dropDownList} />
+                <div className={styles.controls}>
+                    <div
+                        className={styles.friendIconContainer}
+                        onClick={showEntityListDrawer}
+                    >
+                        <Friends styles={styles.friendsIcon} />
+                    </div>
+                    <KebabMenu dropdownItems={dropDownList} />
+                </div>
             </div>
             <div className={styles.messagesBlock}>
                 {messages.map((message) => {
                     return (
                         <div
                             className={`${styles.messageOuterContainer} ${message.isUser ? styles.userMessageContainer : styles.friendMessageContainer}`}
+                            key={message.id}
                         >
                             <div className={styles.messageInnerContainer}>
                                 <p className={styles.userName}>
