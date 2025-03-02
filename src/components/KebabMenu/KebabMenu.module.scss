@@ -3,9 +3,16 @@
 .kebabMenuContainer {
     position: relative;
 
-    .kebabIcon {
-        height: 35px;
-        width: auto;
+    .kebabIconContainer {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .kebabIcon {
+            height: 35px;
+            width: auto;
+            cursor: pointer;
+        }
     }
 
     .kebabDropdown {
@@ -18,16 +25,26 @@
         border-radius: 5px;
         transform-origin: top right;
         animation: fadeIn 0.2s ease-in-out;
+        display: flex;
+        flex-direction: column;
 
         .kebabDropdownItem {
             padding: 7px;
             width: 150px;
             font-size: 18px;
             font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            color: $dark-color;
+            &:hover {
+                background-color: $primary-color-light;
+            }
 
             .kebabDropdownLink {
                 text-decoration: none;
                 color: $dark-color;
+                width: 100%;
+                display: block;
             }
         }
     }

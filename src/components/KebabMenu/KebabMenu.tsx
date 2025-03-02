@@ -34,36 +34,31 @@ const KebabMenu: FC<iKebabMenuProps> = ({ dropdownItems }) => {
                 <VerticalDots styles={styles.kebabIcon} />
             </p>
             {showDropdown ? (
-                <ul className={styles.kebabDropdown}>
+                <div className={styles.kebabDropdown}>
                     {dropdownItems.map((item: iDropdownItem) => {
                         if (item.link) {
                             return (
-                                <li
+                                <Link
+                                    href={item.link}
                                     className={styles.kebabDropdownItem}
-                                    key={`${item.name}-kebab`}
                                 >
-                                    <Link
-                                        href={item.link}
-                                        className={styles.kebabDropdownLink}
-                                    >
-                                        {item.name}
-                                    </Link>
-                                </li>
+                                    {item.name}
+                                </Link>
                             );
                         }
 
                         if (item.handler) {
                             return (
-                                <li
+                                <p
                                     className={styles.kebabDropdownItem}
                                     onClick={item.handler}
                                 >
                                     {item.name}
-                                </li>
+                                </p>
                             );
                         }
                     })}
-                </ul>
+                </div>
             ) : (
                 ""
             )}
