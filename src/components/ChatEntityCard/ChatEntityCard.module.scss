@@ -8,31 +8,6 @@
     padding: 15px 20px;
     border-bottom: 0.5px solid $light-color-dark;
 
-    .entityPicContainer {
-        position: relative;
-        .entityPlaceholderPic {
-            .personIcon {
-                background-color: lighten($color: $primary-color, $amount: 12);
-                border: 3px solid $primary-color-light;
-                border-radius: 50%;
-                width: 65px;
-                height: 65px;
-                fill: $light-color;
-            }
-        }
-
-        .onlineIndicator {
-            background-color: $success-color;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            position: absolute;
-            right: 5px;
-            bottom: 10px;
-            z-index: 2;
-        }
-    }
-
     .entityChatInfo {
         display: flex;
         justify-content: space-between;

@@ -1,7 +1,6 @@
 import { FC } from "react";
 import styles from "./ChatEntityCard.module.scss";
-import Image from "next/image";
-import Person from "../SVG/Person";
+import ChatEntityPic from "../ChatEntityPic/ChatEntityPic";
 
 interface iChatEntityCardProps {
     name: string;
@@ -22,18 +21,7 @@ const ChatEntityCard: FC<iChatEntityCardProps> = ({
 }) => {
     return (
         <div className={styles.chatEntityCardContainer}>
-            <div className={styles.entityPicContainer}>
-                {userPic ? (
-                    <Image src={userPic} alt="User profile picture" />
-                ) : (
-                    <div className={styles.entityPlaceholderPic}>
-                        <Person styles={styles.personIcon} />
-                    </div>
-                )}
-
-                {isOnline ? <p className={styles.onlineIndicator} /> : ""}
-            </div>
-
+            <ChatEntityPic userPic={userPic} isOnline={isOnline} size={65} />
             <div className={styles.entityChatInfo}>
                 <div className={styles.chatInfoLeft}>
                     <p className={styles.entityName}>{name}</p>

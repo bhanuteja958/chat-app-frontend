@@ -5,11 +5,12 @@ import Person from "../SVG/Person";
 import KebabMenu from "../KebabMenu/KebabMenu";
 import Send from "../SVG/Send";
 import Friends from "../SVG/Friends";
+import ChatEntityPic from "../ChatEntityPic/ChatEntityPic";
 
 interface iConversationInterfaceProps {
     userPic: string;
     name: string;
-    onlineStatus: string;
+    onlineStatus: boolean;
     lastSeenTime?: string;
     showEntityListDrawer?: () => void;
 }
@@ -70,15 +71,11 @@ const ConversationInterface: FC<iConversationInterfaceProps> = ({
         <section className={styles.conversationInterfaceContainer}>
             <div className={styles.conversationInterfaceHeader}>
                 <div className={styles.chatEntity}>
-                    <div className={styles.entityPicContainer}>
-                        {userPic ? (
-                            <Image src={userPic} alt="User profile picture" />
-                        ) : (
-                            <div className={styles.entityPlaceholderPic}>
-                                <Person styles={styles.personIcon} />
-                            </div>
-                        )}
-                    </div>
+                    <ChatEntityPic
+                        userPic={userPic}
+                        isOnline={onlineStatus}
+                        size={60}
+                    />
                     <div className={styles.chatEntityInfo}>
                         <p className={styles.entityName}>{name}</p>
                         <p className={styles.onlineStatus}>
