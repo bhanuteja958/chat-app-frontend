@@ -11,10 +11,13 @@
     "author": "Pateel Bhanu Teja",
     "license": "ISC",
     "dependencies": {
+        "@reduxjs/toolkit": "^2.6.0",
         "next": "^15.1.7",
         "react": "^19.0.0",
         "react-datepicker": "^8.1.0",
-        "react-dom": "^19.0.0"
+        "react-dom": "^19.0.0",
+        "react-hot-toast": "^2.5.2",
+        "react-redux": "^9.2.0"
     },
     "devDependencies": {
         "@types/node": "22.13.5",

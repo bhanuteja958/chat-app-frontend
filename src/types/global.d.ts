@@ -27,6 +27,18 @@ declare global {
         link?: string;
         handler?: (...args: [any]) => any;
     }
+
+    interface iLoginPayload {
+        email: string;
+        password: string;
+    }
+
+    interface iRegisterPayload {
+        fullName: string;
+        dob: string;
+        email: string;
+        password: string;
+    }
 }
 
 export {};

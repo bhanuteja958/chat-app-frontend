@@ -1,9 +1,14 @@
 "use client";
-import { FC, FormEvent, FormEventHandler } from "react";
+import { FC, FormEvent, useEffect } from "react";
 import InputWithLabel from "../InputWithLabel/InputWithLabel";
 import useForm from "../../hooks/useForm";
 import styles from "./LoginForm.module.scss";
 import Link from "next/link";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../state/store";
+import { login } from "../../state/slices/userSlice";
+import DotsLoader from "../DotsLoader/DotsLoader";
+import { useRouter } from "next/navigation";
 
 const inputDetails: iInputInfo[] = [
     {
@@ -34,10 +39,37 @@ const inputDetails: iInputInfo[] = [
 const LoginForm: FC<{}> = () => {
     const { values, errors, changeHandler, blurHandler, validateForm } =
         useForm(inputDetails);
+    const router = useRouter();
+
+    const authLoading = useSelector(
+        (state: RootState) => state.user.authLoading,
+    );
+    const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
+    const dispatch: AppDispatch = useDispatch();
 
     const handleLogin = () => {
-        validateForm();
+        const isValidForm = validateForm();
+        if (isValidForm) {
+            const payload: iLoginPayload = {
+                email: values["email"],
+                password: values["password"],
+            };
+            dispatch(login(payload));
+        }
     };
+
+    useEffect(() => {
+        if (isLoggedIn) {
+            router.replace("/chat");
+        }
+    }, []);
+
+    useEffect(() => {
+        if (isLoggedIn) {
+            router.replace("/chat");
+        }
+    }, [isLoggedIn]);
+
     return (
         <div className={styles.loginFormContainer}>
             <form
@@ -62,8 +94,12 @@ const LoginForm: FC<{}> = () => {
                         />
                     );
                 })}
-                <button type="submit" className={styles.loginBtn}>
-                    Login
+                <button
+                    type="submit"
+                    className={styles.loginBtn}
+                    disabled={authLoading}
+                >
+                    {authLoading ? <DotsLoader /> : "Login"}
                 </button>
             </form>
             <p className={styles.registerCta}>

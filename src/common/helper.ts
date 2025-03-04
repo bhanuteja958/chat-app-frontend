@@ -1,4 +1,4 @@
-import { months } from "./constants";
+import { MONTHS } from "./constants";
 
 export const formatDate = (date: Date, format: string) => {
     if (!date) {
@@ -11,7 +11,7 @@ export const formatDate = (date: Date, format: string) => {
 
     switch (format) {
         case "dd mmm yyyy":
-            return `${day} ${months[month].slice(0, 3)} ${year}`;
+            return `${day} ${MONTHS[month].slice(0, 3)} ${year}`;
         default:
             return "";
     }

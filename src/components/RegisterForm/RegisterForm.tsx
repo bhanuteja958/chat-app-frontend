@@ -1,15 +1,21 @@
 "use client";
-import { FC, FormEvent } from "react";
+import { FC, FormEvent, useEffect } from "react";
 import InputWithLabel from "../InputWithLabel/InputWithLabel";
 import useForm from "../../hooks/useForm";
 import styles from "./RegisterForm.module.scss";
 import Link from "next/link";
 import DateInput from "../DateInput/DateInput";
 import { formatDate } from "../../common/helper";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../state/store";
+import { register } from "../../state/slices/userSlice";
+import { useRouter } from "next/navigation";
+import DotsLoader from "../DotsLoader/DotsLoader";
+import { PayloadAction } from "@reduxjs/toolkit";
 
 const inputDetails: iInputInfo[] = [
     {
-        name: "full-name",
+        name: "fullName",
         label: "Full Name",
         inputType: "input",
         type: "text",
@@ -21,7 +27,7 @@ const inputDetails: iInputInfo[] = [
         },
     },
     {
-        name: "date-of-birth",
+        name: "dateOfBirth",
         label: "Date of Birth",
         inputType: "date",
         type: "text",
@@ -63,10 +69,36 @@ const RegisterForm: FC<{}> = () => {
         blurHandler,
         validateForm,
     } = useForm(inputDetails);
+    const router = useRouter();
 
-    const handleRegister = () => {
-        validateForm();
+    const authLoading = useSelector(
+        (state: RootState) => state.user.authLoading,
+    );
+    const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
+    const dispatch: AppDispatch = useDispatch();
+
+    const handleRegister = async () => {
+        const isValidForm: boolean = validateForm();
+        if (isValidForm) {
+            const { email, password, fullName, dateOfBirth } = values;
+            const payload: iRegisterPayload = {
+                dob: dateOfBirth,
+                email,
+                password,
+                fullName,
+            };
+            const res: PayloadAction<any> = await dispatch(register(payload));
+            if (res.payload.success) {
+                router.replace("/login");
+            }
+        }
     };
+
+    useEffect(() => {
+        if (isLoggedIn) {
+            router.replace("/chat");
+        }
+    }, []);
     return (
         <div className={styles.registerFormContainer}>
             <form
@@ -108,7 +140,7 @@ const RegisterForm: FC<{}> = () => {
                     }
                 })}
                 <button type="submit" className={styles.registerBtn}>
-                    Register
+                    {authLoading ? <DotsLoader /> : "Register"}
                 </button>
             </form>
             <p className={styles.loginCta}>

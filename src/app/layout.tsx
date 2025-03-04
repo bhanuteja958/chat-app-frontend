@@ -1,7 +1,8 @@
 import React from "react";
 import { Alfa_Slab_One, Poppins } from "next/font/google";
 import "./styles/global.scss";
-
+import ReduxProvider from "../state/ReduxProvider";
+import ToastProvier from "../components/ToastProvider/ToastProvider";
 const alfaSlabOne = Alfa_Slab_One({
     subsets: ["latin"],
     weight: ["400"],
@@ -23,7 +24,10 @@ export default function RootLayout({
             lang="en"
             className={`${alfaSlabOne.variable} ${poppins.variable}`}
         >
-            <body>{children}</body>
+            <body>
+                <ReduxProvider>{children}</ReduxProvider>
+                <ToastProvier />
+            </body>
         </html>
     );
 }
