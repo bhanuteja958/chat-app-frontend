@@ -18,7 +18,7 @@ const HeroSection: FC<{}> = () => {
                     <p className={styles.features}>Simple, Reliable, Private</p>
                 </div>
                 <CurlyArrow styles={styles.curlyArrow} />
-                <Link href={"/"} className={styles.heroSectionCta}>
+                <Link href={"/chat"} className={styles.heroSectionCta}>
                     Talk with people
                 </Link>
             </div>

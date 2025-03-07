@@ -41,6 +41,7 @@ const KebabMenu: FC<iKebabMenuProps> = ({ dropdownItems }) => {
                                 <Link
                                     href={item.link}
                                     className={styles.kebabDropdownItem}
+                                    key={item.name}
                                 >
                                     {item.name}
                                 </Link>
@@ -52,6 +53,7 @@ const KebabMenu: FC<iKebabMenuProps> = ({ dropdownItems }) => {
                                 <p
                                     className={styles.kebabDropdownItem}
                                     onClick={item.handler}
+                                    key={item.name}
                                 >
                                     {item.name}
                                 </p>

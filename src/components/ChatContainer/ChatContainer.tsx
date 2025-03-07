@@ -9,14 +9,11 @@ const ChatContainer: FC<{}> = () => {
     const [showEntityListDrawer, setShowEntityListDrawer] =
         useState<boolean>(true);
 
-    const toggleEntityListDrawer = (value: boolean) => {
-        setShowEntityListDrawer(value);
-    };
     return (
         <div className={styles.chatContainer}>
             <ConversationInterface
                 name="Alex"
-                onlineStatus="true"
+                onlineStatus={true}
                 userPic={null}
                 showEntityListDrawer={() => {
                     setShowEntityListDrawer(true);

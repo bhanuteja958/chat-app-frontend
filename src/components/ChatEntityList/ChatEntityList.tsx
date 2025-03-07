@@ -7,6 +7,10 @@ import { debounce } from "../../common/helper";
 import KebabMenu from "../KebabMenu/KebabMenu";
 import Close from "../SVG/Close";
 import AddFriendModal from "../AddFriendModal/AddFriendModal";
+import { useDispatch, useSelector } from "react-redux";
+import { logoutUser } from "../../state/slices/userSlice";
+import { AppDispatch, RootState } from "../../state/store";
+import { useRouter } from "next/navigation";
 
 interface iChatEntityListProps {
     closeChatEntityList?: () => void;
@@ -15,6 +19,11 @@ interface iChatEntityListProps {
 const ChatEntityList: FC<iChatEntityListProps> = ({ closeChatEntityList }) => {
     const [showAddFriendModal, setShowAddFriendModal] =
         useState<boolean>(false);
+    const dispatch: AppDispatch = useDispatch();
+    const isLoggedIn: boolean = useSelector(
+        (state: RootState) => state.user.isLoggedIn,
+    );
+    const router = useRouter();
     const dropDownList: iDropdownItem[] = useMemo(
         () => [
             {
@@ -30,6 +39,15 @@ const ChatEntityList: FC<iChatEntityListProps> = ({ closeChatEntityList }) => {
             {
                 name: "Settings",
                 link: "/profile",
+            },
+            {
+                name: "Logout",
+                handler: async () => {
+                    await dispatch(logoutUser());
+                    if (!isLoggedIn) {
+                        router.replace("/login");
+                    }
+                },
             },
         ],
         [],
