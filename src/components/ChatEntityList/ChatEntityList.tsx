@@ -1,5 +1,5 @@
 "use client";
-import { FC, useMemo, useState } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import ChatEntityCard from "../ChatEntityCard/ChatEntityCard";
 import styles from "./ChatEntityList.module.scss";
 import SearchInput from "../SearchInput/SearchInput";
@@ -11,6 +11,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../../state/slices/userSlice";
 import { AppDispatch, RootState } from "../../state/store";
 import { useRouter } from "next/navigation";
+import { getAllFriends } from "../../state/slices/friendsSlice";
+import CircularLoader from "../CirculatLoader/CircularLoader";
 
 interface iChatEntityListProps {
     closeChatEntityList?: () => void;
@@ -19,17 +21,26 @@ interface iChatEntityListProps {
 const ChatEntityList: FC<iChatEntityListProps> = ({ closeChatEntityList }) => {
     const [showAddFriendModal, setShowAddFriendModal] =
         useState<boolean>(false);
+
     const dispatch: AppDispatch = useDispatch();
     const isLoggedIn: boolean = useSelector(
         (state: RootState) => state.user.isLoggedIn,
     );
+    const friendsList: Array<any> = useSelector(
+        (state: RootState) => state.friends.friendsList,
+    );
+    const friendsLoading: boolean = useSelector(
+        (state: RootState) => state.friends.friendsLoading,
+    );
+
     const router = useRouter();
+
     const dropDownList: iDropdownItem[] = useMemo(
         () => [
-            {
-                name: "Users",
-                link: "/chat/users",
-            },
+            // {
+            //     name: "Users",
+            //     link: "/chat/users",
+            // },
             {
                 name: "Add Friend",
                 handler: () => {
@@ -44,6 +55,7 @@ const ChatEntityList: FC<iChatEntityListProps> = ({ closeChatEntityList }) => {
                 name: "Logout",
                 handler: async () => {
                     await dispatch(logoutUser());
+                    console.log(isLoggedIn);
                     if (!isLoggedIn) {
                         router.replace("/login");
                     }
@@ -57,105 +69,66 @@ const ChatEntityList: FC<iChatEntityListProps> = ({ closeChatEntityList }) => {
         // yet to code functionality
     };
 
+    useEffect(() => {
+        if (isLoggedIn && friendsList.length === 0) {
+            dispatch(getAllFriends());
+        }
+    }, [isLoggedIn]);
+
     return (
         <section className={styles.chatEntityListContainer}>
-            <div className={styles.chatEntityListHeader}>
-                <div className={styles.chatEntityListHeaderLeft}>
-                    <div
-                        className={styles.closeIconContainer}
-                        onClick={closeChatEntityList}
-                    >
-                        <Close styles={styles.closeIcon} />
-                    </div>
-                    <SearchInput
-                        processSearchValue={debounce(filterEntities, 500)}
-                    />
+            {friendsLoading ? (
+                <div className={styles.loader}>
+                    <CircularLoader text="Loading Friends" />
                 </div>
-
-                <KebabMenu dropdownItems={dropDownList} />
-            </div>
-            <div className={styles.chatEntityList}>
-                <ChatEntityCard
-                    name="alex"
-                    unseenMessageCount={2}
-                    userPic={null}
-                    isOnline={true}
-                    lastSeenTime="6:30 PM"
-                    latestMessage="Hello World"
-                />
-                <ChatEntityCard
-                    name="alex"
-                    unseenMessageCount={2}
-                    userPic={null}
-                    isOnline={true}
-                    lastSeenTime="6:30 PM"
-                    latestMessage="Hello World"
-                />
-                <ChatEntityCard
-                    name="alex"
-                    unseenMessageCount={2}
-                    userPic={null}
-                    isOnline={true}
-                    lastSeenTime="6:30 PM"
-                    latestMessage="Hello World"
-                />
-                <ChatEntityCard
-                    name="alex"
-                    unseenMessageCount={2}
-                    userPic={null}
-                    isOnline={true}
-                    lastSeenTime="6:30 PM"
-                    latestMessage="Hello World"
-                />
-                <ChatEntityCard
-                    name="alex"
-                    unseenMessageCount={2}
-                    userPic={null}
-                    isOnline={true}
-                    lastSeenTime="6:30 PM"
-                    latestMessage="Hello World"
-                />
-                <ChatEntityCard
-                    name="alex"
-                    unseenMessageCount={2}
-                    userPic={null}
-                    isOnline={true}
-                    lastSeenTime="6:30 PM"
-                    latestMessage="Hello World"
-                />
-                <ChatEntityCard
-                    name="alex"
-                    unseenMessageCount={2}
-                    userPic={null}
-                    isOnline={true}
-                    lastSeenTime="6:30 PM"
-                    latestMessage="Hello World"
-                />
-                <ChatEntityCard
-                    name="alex"
-                    unseenMessageCount={2}
-                    userPic={null}
-                    isOnline={true}
-                    lastSeenTime="6:30 PM"
-                    latestMessage="Hello World"
-                />
-                <ChatEntityCard
-                    name="alex"
-                    unseenMessageCount={2}
-                    userPic={null}
-                    isOnline={true}
-                    lastSeenTime="6:30 PM"
-                    latestMessage="Hello World"
-                />
-            </div>
-            {showAddFriendModal ? (
-                <AddFriendModal
-                    closeHandler={() => {
-                        setShowAddFriendModal(false);
-                    }}
-                />
             ) : (
-                ""
+                <>
+                    <div className={styles.chatEntityListHeader}>
+                        <div className={styles.chatEntityListHeaderLeft}>
+                            <div
+                                className={styles.closeIconContainer}
+                                onClick={closeChatEntityList}
+                            >
+                                <Close styles={styles.closeIcon} />
+                            </div>
+                            <SearchInput
+                                processSearchValue={debounce(
+                                    filterEntities,
+                                    500,
+                                )}
+                            />
+                        </div>
+                        <KebabMenu dropdownItems={dropDownList} />
+                    </div>
+                    <div className={styles.chatEntityList}>
+                        {friendsList.length === 0 ? (
+                            <p className={styles.noFriendsText}>
+                                No friends yet. Add now
+                            </p>
+                        ) : (
+                            friendsList.map((friend) => {
+                                const { fullName, profilePic } = friend;
+                                return (
+                                    <ChatEntityCard
+                                        name={fullName}
+                                        userPic={profilePic}
+                                        isOnline={true}
+                                        key={friend.userId}
+                                    />
+                                );
+                            })
+                        )}
+                    </div>
+                    {showAddFriendModal ? (
+                        <AddFriendModal
+                            closeHandler={() => {
+                                setShowAddFriendModal(false);
+                            }}
+                        />
+                    ) : (
+                        ""
+                    )}
+                </>
             )}
         </section>
     );

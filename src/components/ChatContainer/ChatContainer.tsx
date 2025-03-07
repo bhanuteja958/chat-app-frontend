@@ -19,8 +19,8 @@ const ChatContainer: FC<{}> = () => {
                     setShowEntityListDrawer(true);
                 }}
             />
-            <Portal>
-                {showEntityListDrawer ? (
+            {showEntityListDrawer ? (
+                <Portal>
                     <div className={styles.chatEntityListDrawer}>
                         <ChatEntityList
                             closeChatEntityList={() => {
@@ -28,10 +28,10 @@ const ChatContainer: FC<{}> = () => {
                             }}
                         />
                     </div>
-                ) : (
-                    ""
-                )}
-            </Portal>
+                </Portal>
+            ) : (
+                ""
+            )}
         </div>
     );
 };

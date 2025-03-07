@@ -23,14 +23,6 @@ const CheckAuth: FC<iCheckAuthProps> = ({
 
     const checkAuthentication = async () => {
         await dispatch(userInfo());
-        if (isLoggedIn && isAuthRoute) {
-            router.replace("/chat");
-            return;
-        }
-
-        if (redirectToLogin) {
-            router.replace("/login");
-        }
     };
 
     useEffect(() => {
@@ -40,6 +32,17 @@ const CheckAuth: FC<iCheckAuthProps> = ({
             router.replace("/chat");
         }
     }, []);
+
+    useEffect(() => {
+        if (isLoggedIn && isAuthRoute) {
+            router.replace("/chat");
+            return;
+        }
+
+        if (!isLoggedIn && redirectToLogin) {
+            router.replace("/login");
+        }
+    }, [isLoggedIn]);
 
     return null;
 };

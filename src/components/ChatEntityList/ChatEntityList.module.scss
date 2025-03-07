@@ -4,6 +4,13 @@
     width: 100%;
     height: 100vh;
     overflow-x: hidden;
+
+    .loader {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+    }
     .chatEntityListHeader {
         display: flex;
         padding: 10px;
@@ -33,5 +40,11 @@
     .chatEntityList {
         height: calc(100% - 70px);
         overflow: auto;
+
+        .noFriendsText {
+            margin-top: 20px;
+            font-size: 18px;
+            text-align: center;
+        }
     }
 }

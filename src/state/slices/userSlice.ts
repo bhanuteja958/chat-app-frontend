@@ -16,13 +16,13 @@ import toast from "react-hot-toast";
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 interface iUserSliceState {
-    isLoggedIn: boolean;
+    isLoggedIn: boolean | null;
     authLoading: boolean;
     userDetails: any;
 }
 
 const initialState: iUserSliceState = {
-    isLoggedIn: false,
+    isLoggedIn: null,
     authLoading: false,
     userDetails: {},
 };
@@ -38,7 +38,6 @@ const userSlice: Slice<iUserSliceState> = createSlice({
                     return [
                         "user/login/pending",
                         "user/logout/pending",
-                        "user/info/pending",
                         "user/register/pending",
                     ].includes(action.type);
                 },
@@ -68,8 +67,8 @@ const userSlice: Slice<iUserSliceState> = createSlice({
                             state.isLoggedIn = !success;
                             break;
                         case "user/info/fulfilled":
-                            state.isLoggedIn = success;
                             showToast = false;
+                            state.isLoggedIn = success;
                             if (success) {
                                 state.userDetails = data;
                             }

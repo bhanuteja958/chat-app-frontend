@@ -5,3 +5,6 @@ export const LOGOUT_API = "api/v1/auth/logout";
 
 // User APIs
 export const USER_INFO_API = "api/v1/user/info";
+
+// Friend APIs
+export const FRIENDS_LIST_API = "api/v1/friend/fetch";
