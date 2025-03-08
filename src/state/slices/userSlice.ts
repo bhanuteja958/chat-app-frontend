@@ -12,6 +12,7 @@ import {
     USER_INFO_API,
 } from "../../common/APIs";
 import toast from "react-hot-toast";
+import { resetState } from "../store";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -33,6 +34,9 @@ const userSlice: Slice<iUserSliceState> = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
+            .addCase(resetState, (state: iUserSliceState) => {
+                return initialState;
+            })
             .addMatcher(
                 (action: Action) => {
                     return [

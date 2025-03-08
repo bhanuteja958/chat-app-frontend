@@ -73,6 +73,26 @@
         width: 100%;
         overflow: auto;
 
+        .noMessagesText {
+            text-align: center;
+            margin-top: 20px;
+            font-weight: 500;
+        }
+
+        .messagesDate {
+            align-self: center;
+            width: max-content;
+            border: 1px solid $primary-color;
+            color: $secondary-color;
+            padding: 5px 15px;
+            border-radius: 20px;
+            position: sticky;
+            top: 0;
+            background-color: $light-color;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
         .messageOuterContainer {
             display: flex;
             width: 100%;

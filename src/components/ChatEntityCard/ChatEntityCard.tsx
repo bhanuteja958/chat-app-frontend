@@ -9,6 +9,7 @@ interface iChatEntityCardProps {
     lastSeenTime?: string;
     userPic: string;
     isOnline: boolean;
+    cardClickHandler: () => void;
 }
 
 const ChatEntityCard: FC<iChatEntityCardProps> = ({
@@ -18,9 +19,15 @@ const ChatEntityCard: FC<iChatEntityCardProps> = ({
     lastSeenTime,
     userPic,
     isOnline,
+    cardClickHandler,
 }) => {
     return (
-        <div className={styles.chatEntityCardContainer}>
+        <div
+            className={styles.chatEntityCardContainer}
+            onClick={() => {
+                cardClickHandler();
+            }}
+        >
             <ChatEntityPic userPic={userPic} isOnline={isOnline} size={65} />
             <div className={styles.entityChatInfo}>
                 <div className={styles.chatInfoLeft}>

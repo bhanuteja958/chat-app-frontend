@@ -6,12 +6,13 @@ import {
 } from "@reduxjs/toolkit";
 import { FRIENDS_LIST_API } from "../../common/APIs";
 import toast from "react-hot-toast";
+import { resetState } from "../store";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 interface iFriendsSliceState {
     friendsLoading: boolean;
-    friendsList: Array<any>;
+    friendsList: Array<iFriendDetails>;
 }
 
 const initialState: iFriendsSliceState = {
@@ -25,6 +26,9 @@ const friendsSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
+            .addCase(resetState, (state: iFriendsSliceState) => {
+                return initialState;
+            })
             .addCase(getAllFriends.pending, (state: iFriendsSliceState) => {
                 state.friendsLoading = true;
             })

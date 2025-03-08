@@ -9,16 +9,22 @@ import Close from "../SVG/Close";
 import AddFriendModal from "../AddFriendModal/AddFriendModal";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../../state/slices/userSlice";
-import { AppDispatch, RootState } from "../../state/store";
-import { useRouter } from "next/navigation";
+import { AppDispatch, resetState, RootState } from "../../state/store";
 import { getAllFriends } from "../../state/slices/friendsSlice";
 import CircularLoader from "../CirculatLoader/CircularLoader";
+import { UI_STATUS } from "../../common/constants";
 
 interface iChatEntityListProps {
     closeChatEntityList?: () => void;
+    selectFriendForChat: (x: any) => void;
+    sendUIStatus: (x: any) => void;
 }
 
-const ChatEntityList: FC<iChatEntityListProps> = ({ closeChatEntityList }) => {
+const ChatEntityList: FC<iChatEntityListProps> = ({
+    closeChatEntityList,
+    selectFriendForChat,
+    sendUIStatus,
+}) => {
     const [showAddFriendModal, setShowAddFriendModal] =
         useState<boolean>(false);
 
@@ -32,8 +38,12 @@ const ChatEntityList: FC<iChatEntityListProps> = ({ closeChatEntityList }) => {
     const friendsLoading: boolean = useSelector(
         (state: RootState) => state.friends.friendsLoading,
     );
-
-    const router = useRouter();
+    const unseenMessageCounts: Record<number, number> = useSelector(
+        (state: RootState) => state.chats.unseenMessageCounts,
+    );
+    const latestMessages: Record<number, string> = useSelector(
+        (state: RootState) => state.chats.latestMessages,
+    );
 
     const dropDownList: iDropdownItem[] = useMemo(
         () => [
@@ -55,10 +65,7 @@ const ChatEntityList: FC<iChatEntityListProps> = ({ closeChatEntityList }) => {
                 name: "Logout",
                 handler: async () => {
                     await dispatch(logoutUser());
-                    console.log(isLoggedIn);
-                    if (!isLoggedIn) {
-                        router.replace("/login");
-                    }
+                    dispatch(resetState());
                 },
             },
         ],
@@ -68,6 +75,12 @@ const ChatEntityList: FC<iChatEntityListProps> = ({ closeChatEntityList }) => {
     const filterEntities = (value: string) => {
         // yet to code functionality
     };
+
+    useEffect(() => {
+        sendUIStatus({
+            status: UI_STATUS.viewingFriendsList,
+        });
+    }, []);
 
     useEffect(() => {
         if (isLoggedIn && friendsList.length === 0) {
@@ -106,7 +119,7 @@ const ChatEntityList: FC<iChatEntityListProps> = ({ closeChatEntityList }) => {
                                 No friends yet. Add now
                             </p>
                         ) : (
-                            friendsList.map((friend) => {
+                            friendsList.map((friend: iFriendDetails) => {
                                 const { fullName, profilePic } = friend;
                                 return (
                                     <ChatEntityCard
@@ -114,6 +127,15 @@ const ChatEntityList: FC<iChatEntityListProps> = ({ closeChatEntityList }) => {
                                         userPic={profilePic}
                                         isOnline={true}
                                         key={friend.userId}
+                                        cardClickHandler={() => {
+                                            selectFriendForChat(friend);
+                                        }}
+                                        unseenMessageCount={
+                                            unseenMessageCounts[friend.userId]
+                                        }
+                                        latestMessage={
+                                            latestMessages[friend.userId]
+                                        }
                                     />
                                 );
                             })

@@ -39,6 +39,18 @@ declare global {
         email: string;
         password: string;
     }
+
+    interface iFriendDetails {
+        userId: number;
+        profilePic: string;
+        fullName: string;
+        email: string;
+    }
+
+    interface iSocketMessage {
+        type: string;
+        data: any;
+    }
 }
 
 export {};

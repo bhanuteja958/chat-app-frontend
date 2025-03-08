@@ -22,10 +22,8 @@ const ChatEntityPic: FC<ChatEntityPicProps> = ({ userPic, isOnline, size }) => {
                 <Image
                     src={userPic}
                     alt="User profile picture"
-                    style={{
-                        width: `${size || 50}px`,
-                        height: `${size || 50}px`,
-                    }}
+                    width={size || 50}
+                    height={size || 50}
                 />
             ) : (
                 <div className={styles.entityPlaceholderPic}>
