@@ -67,7 +67,6 @@
     .messagesBlock {
         display: flex;
         flex-direction: column;
-        row-gap: 20px;
         padding: 5px 15px;
         height: calc(100% - 150px);
         width: 100%;
@@ -122,6 +121,14 @@
                     border-radius: 5px 15px 5px 15px;
                 }
             }
+        }
+
+        .singleMessage {
+            margin-top: 20px;
+        }
+
+        .groupMessage {
+            margin-top: 0;
         }
 
         .userMessageContainer {

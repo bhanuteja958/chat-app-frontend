@@ -1,9 +1,4 @@
-import {
-    createAsyncThunk,
-    createSlice,
-    isRejectedWithValue,
-    PayloadAction,
-} from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { FRIENDS_LIST_API } from "../../common/APIs";
 import toast from "react-hot-toast";
 import { resetState } from "../store";

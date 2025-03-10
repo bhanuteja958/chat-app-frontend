@@ -15,8 +15,7 @@ const ChatContainer: FC<{}> = () => {
     const [currentChatFriend, setCurrentChatFriend] =
         useState<iFriendDetails | null>(null);
     const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
-    const { initiateSocketConnection, sendUIStatus, sendSocketMessage } =
-        useSocket();
+    const { initiateSocketConnection, sendUIStatus } = useSocket();
 
     useEffect(() => {
         if (isLoggedIn) {
