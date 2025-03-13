@@ -44,7 +44,7 @@ const ChatEntityCard: FC<iChatEntityCardProps> = ({
                     )}
                     {unseenMessageCount ? (
                         <p className={styles.unseenMessageCount}>
-                            <span>2</span>
+                            <span>{unseenMessageCount}</span>
                         </p>
                     ) : (
                         ""
