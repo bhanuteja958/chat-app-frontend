@@ -1,4 +1,4 @@
-import { FC, Fragment } from "react";
+import { ChangeEvent, FC, useState } from "react";
 import styles from "./ConversationInterface.module.scss";
 import KebabMenu from "../KebabMenu/KebabMenu";
 import Send from "../SVG/Send";
@@ -7,11 +7,12 @@ import ChatEntityPic from "../ChatEntityPic/ChatEntityPic";
 import { useSelector } from "react-redux";
 import { RootState } from "../../state/store";
 import { CHAT_MESSAGE_FOR_DISPLAY } from "../../types/socket";
-import { current } from "@reduxjs/toolkit";
+import { SOCKET_MESSAGE_TYPES } from "../../common/constants";
 
 interface iConversationInterfaceProps {
     selectedFriend: iFriendDetails | null;
     showEntityListDrawer?: () => void;
+    sendSocketMessage: (x: string, y: any) => void;
 }
 
 const dropDownList: iDropdownItem[] = [];
@@ -19,11 +20,31 @@ const dropDownList: iDropdownItem[] = [];
 const ConversationInterface: FC<iConversationInterfaceProps> = ({
     selectedFriend,
     showEntityListDrawer,
+    sendSocketMessage,
 }) => {
     const userDetails: any = useSelector(
         (state: RootState) => state.user.userDetails,
     );
     const chats: any = useSelector((state: RootState) => state.chats.chats);
+    const [inputMessage, setInputMessage] = useState<string>("");
+
+    const handleMessageInputChange = (
+        event: ChangeEvent<HTMLTextAreaElement>,
+    ) => {
+        const { value } = event.target;
+        setInputMessage(value);
+    };
+
+    const sendMessage = () => {
+        const data = {
+            fromId: userDetails.userId,
+            toId: selectedFriend.userId,
+            content: inputMessage,
+        };
+        sendSocketMessage(SOCKET_MESSAGE_TYPES.messageToFriend, data);
+        setInputMessage("");
+    };
+
     return (
         <section className={styles.conversationInterfaceContainer}>
             <div className={styles.conversationInterfaceHeader}>
@@ -73,7 +94,10 @@ const ConversationInterface: FC<iConversationInterfaceProps> = ({
                             let prevDisplayedMessageUserId: number | null =
                                 null;
                             return (
-                                <Fragment key={date}>
+                                <div
+                                    key={date}
+                                    className={styles.messagesOnADate}
+                                >
                                     <p className={styles.messagesDate}>
                                         {date}
                                     </p>
@@ -131,7 +155,7 @@ const ConversationInterface: FC<iConversationInterfaceProps> = ({
                                             </div>
                                         );
                                     })}
-                                </Fragment>
+                                </div>
                             );
                         },
                     )
@@ -147,11 +171,16 @@ const ConversationInterface: FC<iConversationInterfaceProps> = ({
                         className={styles.messageInput}
                         rows={1}
                         disabled={!selectedFriend}
+                        onChange={handleMessageInputChange}
+                        value={inputMessage}
                     />
                     <button
                         type="button"
                         className={styles.sendButton}
                         disabled={!selectedFriend}
+                        onClick={() => {
+                            sendMessage();
+                        }}
                     >
                         <Send styles={styles.sendIcon} />
                     </button>

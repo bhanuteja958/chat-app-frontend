@@ -6,8 +6,10 @@ import { SOCKET_MESSAGE_TYPES } from "../common/constants";
 
 import {
     historicalChatHandler,
+    messageFromChattingFriendHandler,
     unsentMessageCountsWithLatestMessageHandler,
 } from "../utility/message-handler";
+import { pushSentMessage } from "../state/slices/chatSlice";
 
 const useSocket = () => {
     const [ws, setWs] = useState<WebSocket | null>(null);
@@ -21,6 +23,8 @@ const useSocket = () => {
             [SOCKET_MESSAGE_TYPES.unsentMessageCountWithLatestMessage]:
                 unsentMessageCountsWithLatestMessageHandler,
             [SOCKET_MESSAGE_TYPES.historicalChat]: historicalChatHandler,
+            [SOCKET_MESSAGE_TYPES.messageFromChattingFriend]:
+                messageFromChattingFriendHandler,
         }),
         [],
     );
@@ -61,6 +65,7 @@ const useSocket = () => {
         };
         if (ws.OPEN) {
             ws.send(JSON.stringify(message));
+            dispatch(pushSentMessage(data));
         } else {
             setPendingMessages((prevMessages) => [...prevMessages, message]);
         }

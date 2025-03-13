@@ -20,3 +20,10 @@ export interface HISTORICAL_CHAT_DATA {
     friendId: number;
     chat: Array<CHAT_MESSAGE>;
 }
+
+export interface MESSAGE_FROM_CHATTING_FRIEND_DATA {
+    fromId: number;
+    toId: number;
+    content: number;
+    sentDate: string;
+}

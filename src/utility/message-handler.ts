@@ -1,6 +1,7 @@
 import { formatDate } from "../common/helper";
 import {
     pushHistoricChatData,
+    pushReceivedMessage,
     setLatestMessages,
     setUnseenMessageCounts,
 } from "../state/slices/chatSlice";
@@ -8,6 +9,7 @@ import { AppDispatch } from "../state/store";
 import {
     CHAT_MESSAGE,
     HISTORICAL_CHAT_DATA,
+    MESSAGE_FROM_CHATTING_FRIEND_DATA,
     UNSEEN_MESSAGE_COUNT_WITH_LATEST_MESSAGE_DATA,
 } from "../types/socket";
 
@@ -58,4 +60,11 @@ export const historicalChatHandler = (
             chatData: newChatData,
         }),
     );
+};
+
+export const messageFromChattingFriendHandler = (
+    data: MESSAGE_FROM_CHATTING_FRIEND_DATA,
+    dispatch: AppDispatch,
+) => {
+    dispatch(pushReceivedMessage(data));
 };

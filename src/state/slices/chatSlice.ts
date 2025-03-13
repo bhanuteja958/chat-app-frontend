@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { CHAT_MESSAGE_FOR_DISPLAY } from "../../types/socket";
 import { resetState } from "../store";
+import { formatDate } from "../../common/helper";
 
 interface iChatSliceProps {
     chats: any;
@@ -55,6 +56,60 @@ const chatSlice = createSlice({
                 },
             );
         },
+        pushSentMessage: (
+            state: iChatSliceProps,
+            action: PayloadAction<any>,
+        ) => {
+            const { toId, content } = action.payload;
+            const currentDate = formatDate(new Date(), "dd mmm yyyy");
+            const currentTime = new Date().toLocaleTimeString("en-US", {
+                hour: "numeric",
+                minute: "2-digit",
+            });
+
+            if (!state.chats[toId]) {
+                state.chats[toId] = {};
+            }
+
+            if (!state.chats[toId][currentDate]) {
+                state.chats[toId][currentDate] = [];
+            }
+
+            state.chats[toId][currentDate].push({
+                content,
+                isUser: true,
+                sentLocalTime: currentTime,
+            });
+        },
+        pushReceivedMessage: (
+            state: iChatSliceProps,
+            action: PayloadAction<any>,
+        ) => {
+            const { fromId, content, sentDate } = action.payload;
+
+            const formattedSentDate = formatDate(
+                new Date(sentDate),
+                "dd mmm yyyy",
+            );
+            const sentTime = new Date(sentDate).toLocaleTimeString("en-US", {
+                hour: "numeric",
+                minute: "2-digit",
+            });
+
+            if (!state.chats[fromId]) {
+                state.chats[fromId] = {};
+            }
+
+            if (!state.chats[fromId][formattedSentDate]) {
+                state.chats[fromId][formattedSentDate] = [];
+            }
+
+            state.chats[fromId][formattedSentDate].push({
+                content,
+                isUser: true,
+                sentTime,
+            });
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(resetState, () => {
@@ -67,6 +122,8 @@ export const {
     setLatestMessages,
     setUnseenMessageCounts,
     pushHistoricChatData,
+    pushSentMessage,
+    pushReceivedMessage,
 } = chatSlice.actions;
 
 export default chatSlice.reducer;

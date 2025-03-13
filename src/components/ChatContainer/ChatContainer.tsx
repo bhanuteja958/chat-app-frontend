@@ -15,7 +15,8 @@ const ChatContainer: FC<{}> = () => {
     const [currentChatFriend, setCurrentChatFriend] =
         useState<iFriendDetails | null>(null);
     const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
-    const { initiateSocketConnection, sendUIStatus } = useSocket();
+    const { initiateSocketConnection, sendUIStatus, sendSocketMessage } =
+        useSocket();
 
     useEffect(() => {
         if (isLoggedIn) {
@@ -30,6 +31,7 @@ const ChatContainer: FC<{}> = () => {
                 showEntityListDrawer={() => {
                     setShowEntityListDrawer(true);
                 }}
+                sendSocketMessage={sendSocketMessage}
             />
             {showEntityListDrawer ? (
                 <Portal>
