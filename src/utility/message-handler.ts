@@ -4,12 +4,14 @@ import {
     pushReceivedMessage,
     setLatestMessages,
     setUnseenMessageCounts,
+    setUnseenMesssageCountAndUpdateLatestMessage,
 } from "../state/slices/chatSlice";
 import { AppDispatch } from "../state/store";
 import {
     CHAT_MESSAGE,
     HISTORICAL_CHAT_DATA,
     MESSAGE_FROM_CHATTING_FRIEND_DATA,
+    MESSAGE_FROM_NOT_CHATTING_FRIEND_DATA,
     UNSEEN_MESSAGE_COUNT_WITH_LATEST_MESSAGE_DATA,
 } from "../types/socket";
 
@@ -25,7 +27,7 @@ export const unsentMessageCountsWithLatestMessageHandler = (
         latestMessages[friendId] = latestMessage;
     });
     dispatch(setLatestMessages(latestMessages));
-    dispatch(setUnseenMessageCounts(latestMessages));
+    dispatch(setUnseenMessageCounts(unseenMessageCounts));
 };
 
 export const historicalChatHandler = (
@@ -67,4 +69,16 @@ export const messageFromChattingFriendHandler = (
     dispatch: AppDispatch,
 ) => {
     dispatch(pushReceivedMessage(data));
+};
+
+export const messageFromNotChattingFriendHandler = (
+    data: MESSAGE_FROM_NOT_CHATTING_FRIEND_DATA,
+    dispatch: AppDispatch,
+) => {
+    const { fromId, content } = data;
+    const actionPayload: any = {
+        friendId: fromId,
+        content: content,
+    };
+    dispatch(setUnseenMesssageCountAndUpdateLatestMessage(actionPayload));
 };

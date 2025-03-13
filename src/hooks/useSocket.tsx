@@ -7,6 +7,7 @@ import { SOCKET_MESSAGE_TYPES } from "../common/constants";
 import {
     historicalChatHandler,
     messageFromChattingFriendHandler,
+    messageFromNotChattingFriendHandler,
     unsentMessageCountsWithLatestMessageHandler,
 } from "../utility/message-handler";
 import { pushSentMessage } from "../state/slices/chatSlice";
@@ -25,6 +26,8 @@ const useSocket = () => {
             [SOCKET_MESSAGE_TYPES.historicalChat]: historicalChatHandler,
             [SOCKET_MESSAGE_TYPES.messageFromChattingFriend]:
                 messageFromChattingFriendHandler,
+            [SOCKET_MESSAGE_TYPES.messageFromNotChattingFriend]:
+                messageFromNotChattingFriendHandler,
         }),
         [],
     );

@@ -110,6 +110,14 @@ const chatSlice = createSlice({
                 sentTime,
             });
         },
+        setUnseenMesssageCountAndUpdateLatestMessage: (
+            state: iChatSliceProps,
+            action: PayloadAction<any>,
+        ) => {
+            const { friendId, content } = action.payload;
+            state.unseenMessageCounts[friendId] += 1;
+            state.latestMessages[friendId] = content;
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(resetState, () => {
@@ -124,6 +132,7 @@ export const {
     pushHistoricChatData,
     pushSentMessage,
     pushReceivedMessage,
+    setUnseenMesssageCountAndUpdateLatestMessage,
 } = chatSlice.actions;
 
 export default chatSlice.reducer;

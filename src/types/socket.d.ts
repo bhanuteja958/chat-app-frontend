@@ -27,3 +27,10 @@ export interface MESSAGE_FROM_CHATTING_FRIEND_DATA {
     content: number;
     sentDate: string;
 }
+
+export interface MESSAGE_FROM_NOT_CHATTING_FRIEND_DATA {
+    fromId: number;
+    toId: number;
+    content: number;
+    sentDate: string;
+}
