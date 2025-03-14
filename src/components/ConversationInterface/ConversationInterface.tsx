@@ -1,4 +1,11 @@
-import { ChangeEvent, FC, useState } from "react";
+import {
+    ChangeEvent,
+    FC,
+    KeyboardEvent,
+    useEffect,
+    useRef,
+    useState,
+} from "react";
 import styles from "./ConversationInterface.module.scss";
 import KebabMenu from "../KebabMenu/KebabMenu";
 import Send from "../SVG/Send";
@@ -26,6 +33,11 @@ const ConversationInterface: FC<iConversationInterfaceProps> = ({
         (state: RootState) => state.user.userDetails,
     );
     const chats: any = useSelector((state: RootState) => state.chats.chats);
+    const chatsAddedAction: any = useSelector(
+        (state: RootState) => state.chats.chatsAddedAction,
+    );
+    const textAreaRef = useRef<HTMLTextAreaElement>(null);
+    const messageBlockRef = useRef<HTMLDivElement>(null);
     const [inputMessage, setInputMessage] = useState<string>("");
 
     const handleMessageInputChange = (
@@ -36,14 +48,65 @@ const ConversationInterface: FC<iConversationInterfaceProps> = ({
     };
 
     const sendMessage = () => {
-        const data = {
-            fromId: userDetails.userId,
-            toId: selectedFriend.userId,
-            content: inputMessage,
-        };
-        sendSocketMessage(SOCKET_MESSAGE_TYPES.messageToFriend, data);
-        setInputMessage("");
+        if (inputMessage.length > 0) {
+            const data = {
+                fromId: userDetails.userId,
+                toId: selectedFriend.userId,
+                content: inputMessage,
+            };
+            sendSocketMessage(SOCKET_MESSAGE_TYPES.messageToFriend, data);
+            setInputMessage("");
+        }
     };
+
+    const insertNewLineInInputMessage = () => {
+        const messageInput = textAreaRef.current;
+        if (messageInput) {
+            const { selectionStart, selectionEnd } = messageInput;
+            setInputMessage((prevInputMessage: string) => {
+                const updatedMessageText =
+                    prevInputMessage.slice(0, selectionStart) +
+                    "\n" +
+                    prevInputMessage.slice(selectionEnd);
+                return updatedMessageText;
+            });
+        }
+    };
+
+    const handleMessageInputShortcuts = (
+        event: KeyboardEvent<HTMLTextAreaElement>,
+    ) => {
+        const downKey = event.key.toLowerCase();
+
+        if (
+            event.shiftKey &&
+            downKey === "enter" &&
+            !event.ctrlKey &&
+            !event.altKey &&
+            !event.metaKey
+        ) {
+            event.preventDefault();
+            insertNewLineInInputMessage();
+        }
+
+        if (
+            downKey === "enter" &&
+            !event.shiftKey &&
+            !event.ctrlKey &&
+            !event.altKey &&
+            !event.metaKey
+        ) {
+            event.preventDefault();
+            sendMessage();
+        }
+    };
+
+    useEffect(() => {
+        if (messageBlockRef.current && chatsAddedAction === "append") {
+            messageBlockRef.current.scrollTop =
+                messageBlockRef.current.scrollHeight;
+        }
+    }, [chats]);
 
     return (
         <section className={styles.conversationInterfaceContainer}>
@@ -81,7 +144,7 @@ const ConversationInterface: FC<iConversationInterfaceProps> = ({
                     ""
                 )}
             </div>
-            <div className={styles.messagesBlock}>
+            <div className={styles.messagesBlock} ref={messageBlockRef}>
                 {selectedFriend &&
                 chats[selectedFriend.userId] &&
                 Object.entries(chats[selectedFriend.userId]).length > 0 ? (
@@ -102,7 +165,7 @@ const ConversationInterface: FC<iConversationInterfaceProps> = ({
                                         {date}
                                     </p>
                                     {messages.map((message) => {
-                                        const { isUser, content, sentTime } =
+                                        const { isUser, content, messageId } =
                                             message;
                                         const currentDisplayingMessageUserId =
                                             isUser
@@ -126,7 +189,7 @@ const ConversationInterface: FC<iConversationInterfaceProps> = ({
                                         return (
                                             <div
                                                 className={`${styles.messageOuterContainer} ${isUser ? styles.userMessageContainer : styles.friendMessageContainer} ${groupMessages ? styles.groupMessage : styles.singleMessage}`}
-                                                key={content}
+                                                key={messageId}
                                             >
                                                 <div
                                                     className={
@@ -173,6 +236,9 @@ const ConversationInterface: FC<iConversationInterfaceProps> = ({
                         disabled={!selectedFriend}
                         onChange={handleMessageInputChange}
                         value={inputMessage}
+                        onKeyDown={handleMessageInputShortcuts}
+                        placeholder="Message"
+                        ref={textAreaRef}
                     />
                     <button
                         type="button"

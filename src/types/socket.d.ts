@@ -4,6 +4,7 @@ export interface UNSEEN_MESSAGE_COUNT_WITH_LATEST_MESSAGE_DATA {
 }
 
 export interface CHAT_MESSAGE {
+    messageId: number;
     fromId: number;
     toId: number;
     sentDate: string;
@@ -14,6 +15,7 @@ export interface CHAT_MESSAGE_FOR_DISPLAY {
     isUser: boolean;
     content: string;
     sentTime: string;
+    messageId: number;
 }
 
 export interface HISTORICAL_CHAT_DATA {

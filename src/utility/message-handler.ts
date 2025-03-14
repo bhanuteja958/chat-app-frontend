@@ -39,7 +39,7 @@ export const historicalChatHandler = (
     chat.sort((a: CHAT_MESSAGE, b: CHAT_MESSAGE) => {
         return new Date(a.sentDate).getTime() - new Date(b.sentDate).getTime();
     }).forEach((message: CHAT_MESSAGE) => {
-        const { content, fromId, sentDate } = message;
+        const { content, fromId, sentDate, messageId } = message;
         const date = formatDate(new Date(sentDate), "dd mmm yyyy");
         const time = new Date(sentDate).toLocaleTimeString("en-US", {
             hour: "numeric",
@@ -49,6 +49,7 @@ export const historicalChatHandler = (
             content: content,
             isUser: fromId !== friendId,
             sentTime: time,
+            messageId,
         };
         if (!newChatData[date]) {
             newChatData[date] = [];

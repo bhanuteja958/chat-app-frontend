@@ -4,12 +4,14 @@ import { resetState } from "../store";
 import { formatDate } from "../../common/helper";
 
 interface iChatSliceProps {
+    chatsAddedAction: "append" | "preprend" | null;
     chats: any;
     unseenMessageCounts: Record<number, number>;
     latestMessages: Record<number, string>;
 }
 
 const initialState: iChatSliceProps = {
+    chatsAddedAction: null,
     chats: {},
     unseenMessageCounts: {},
     latestMessages: {},
@@ -55,6 +57,7 @@ const chatSlice = createSlice({
                     }
                 },
             );
+            state.chatsAddedAction = "append";
         },
         pushSentMessage: (
             state: iChatSliceProps,
@@ -80,6 +83,7 @@ const chatSlice = createSlice({
                 isUser: true,
                 sentLocalTime: currentTime,
             });
+            state.chatsAddedAction = "append";
         },
         pushReceivedMessage: (
             state: iChatSliceProps,
@@ -109,6 +113,7 @@ const chatSlice = createSlice({
                 isUser: true,
                 sentTime,
             });
+            state.chatsAddedAction = "append";
         },
         setUnseenMesssageCountAndUpdateLatestMessage: (
             state: iChatSliceProps,
