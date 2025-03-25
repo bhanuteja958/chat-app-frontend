@@ -20,6 +20,7 @@ export interface CHAT_MESSAGE_FOR_DISPLAY {
 
 export interface HISTORICAL_CHAT_DATA {
     friendId: number;
+    firstLoad: boolean;
     chat: Array<CHAT_MESSAGE>;
 }
 

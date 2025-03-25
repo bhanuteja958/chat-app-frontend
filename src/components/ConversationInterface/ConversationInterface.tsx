@@ -15,6 +15,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../state/store";
 import { CHAT_MESSAGE_FOR_DISPLAY } from "../../types/socket";
 import { SOCKET_MESSAGE_TYPES } from "../../common/constants";
+import { formatDate } from "../../common/helper";
 
 interface iConversationInterfaceProps {
     selectedFriend: iFriendDetails | null;
@@ -36,9 +37,16 @@ const ConversationInterface: FC<iConversationInterfaceProps> = ({
     const chatsAddedAction: any = useSelector(
         (state: RootState) => state.chats.chatsAddedAction,
     );
+    const fullyLoadedChats = useSelector(
+        (state: RootState) => state.chats.fullyLoadedChats,
+    );
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
     const messageBlockRef = useRef<HTMLDivElement>(null);
+    const topIndicatorRef = useRef<HTMLParagraphElement>(null);
     const [inputMessage, setInputMessage] = useState<string>("");
+    const [scrolledToTop, setScrolledToTop] = useState<boolean>(false);
+    const [canLoadChatHistory, setCanLoadChatHistory] =
+        useState<boolean>(false);
 
     const handleMessageInputChange = (
         event: ChangeEvent<HTMLTextAreaElement>,
@@ -101,12 +109,56 @@ const ConversationInterface: FC<iConversationInterfaceProps> = ({
         }
     };
 
+    const loadMoreChatHistory = () => {
+        console.log();
+        if (
+            selectedFriend &&
+            !fullyLoadedChats.includes(selectedFriend.userId)
+        ) {
+            const data = {
+                friendId: selectedFriend.userId,
+            };
+            sendSocketMessage(SOCKET_MESSAGE_TYPES.loadHistoricalChat, data);
+        }
+    };
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    setScrolledToTop(true);
+                } else {
+                    setScrolledToTop(false);
+                }
+            },
+            {
+                root: messageBlockRef.current,
+                threshold: 1.0,
+            },
+        );
+
+        if (topIndicatorRef.current) {
+            observer.observe(topIndicatorRef.current);
+        }
+
+        return () => {
+            observer.disconnect();
+        };
+    }, []);
+
     useEffect(() => {
         if (messageBlockRef.current && chatsAddedAction === "append") {
             messageBlockRef.current.scrollTop =
                 messageBlockRef.current.scrollHeight;
+            setCanLoadChatHistory(true);
         }
-    }, [chats]);
+    }, [selectedFriend]);
+
+    useEffect(() => {
+        if (scrolledToTop && canLoadChatHistory) {
+            loadMoreChatHistory();
+        }
+    }, [scrolledToTop]);
 
     return (
         <section className={styles.conversationInterfaceContainer}>
@@ -145,83 +197,110 @@ const ConversationInterface: FC<iConversationInterfaceProps> = ({
                 )}
             </div>
             <div className={styles.messagesBlock} ref={messageBlockRef}>
+                <p id="topIndicator" ref={topIndicatorRef} />
                 {selectedFriend &&
                 chats[selectedFriend.userId] &&
                 Object.entries(chats[selectedFriend.userId]).length > 0 ? (
-                    Object.entries(chats[selectedFriend.userId]).map(
-                        ([date, messages]: [
-                            string,
-                            Array<CHAT_MESSAGE_FOR_DISPLAY>,
-                        ]) => {
-                            let groupMessages: boolean = false;
-                            let prevDisplayedMessageUserId: number | null =
-                                null;
-                            return (
-                                <div
-                                    key={date}
-                                    className={styles.messagesOnADate}
-                                >
-                                    <p className={styles.messagesDate}>
-                                        {date}
-                                    </p>
-                                    {messages.map((message) => {
-                                        const { isUser, content, messageId } =
-                                            message;
-                                        const currentDisplayingMessageUserId =
-                                            isUser
-                                                ? userDetails.userId
-                                                : selectedFriend.userId;
-                                        if (!prevDisplayedMessageUserId) {
-                                            prevDisplayedMessageUserId =
-                                                currentDisplayingMessageUserId;
-                                        } else {
-                                            if (
-                                                prevDisplayedMessageUserId ===
-                                                currentDisplayingMessageUserId
-                                            ) {
-                                                groupMessages = true;
-                                            } else {
-                                                groupMessages = false;
+                    Object.entries(chats[selectedFriend.userId])
+                        .sort(([date1, value1], [date2, value2]) => {
+                            let a = new Date(date1);
+                            let b = new Date(date2);
+                            return a.getTime() - b.getTime();
+                        })
+                        .map(
+                            ([date, messages]: [
+                                string,
+                                Array<CHAT_MESSAGE_FOR_DISPLAY>,
+                            ]) => {
+                                let groupMessages: boolean = false;
+                                let prevDisplayedMessageUserId: number | null =
+                                    null;
+                                return (
+                                    <div
+                                        key={date}
+                                        className={styles.messagesOnADate}
+                                    >
+                                        <p className={styles.messagesDate}>
+                                            {formatDate(
+                                                new Date(date),
+                                                "dd mmm yyyy",
+                                            )}
+                                        </p>
+                                        {messages.map((message) => {
+                                            const {
+                                                isUser,
+                                                content,
+                                                messageId,
+                                                sentTime,
+                                            } = message;
+                                            const currentDisplayingMessageUserId =
+                                                isUser
+                                                    ? userDetails.userId
+                                                    : selectedFriend.userId;
+                                            if (!prevDisplayedMessageUserId) {
                                                 prevDisplayedMessageUserId =
                                                     currentDisplayingMessageUserId;
+                                            } else {
+                                                if (
+                                                    prevDisplayedMessageUserId ===
+                                                    currentDisplayingMessageUserId
+                                                ) {
+                                                    groupMessages = true;
+                                                } else {
+                                                    groupMessages = false;
+                                                    prevDisplayedMessageUserId =
+                                                        currentDisplayingMessageUserId;
+                                                }
                                             }
-                                        }
-                                        return (
-                                            <div
-                                                className={`${styles.messageOuterContainer} ${isUser ? styles.userMessageContainer : styles.friendMessageContainer} ${groupMessages ? styles.groupMessage : styles.singleMessage}`}
-                                                key={messageId}
-                                            >
+                                            return (
                                                 <div
-                                                    className={
-                                                        styles.messageInnerContainer
-                                                    }
+                                                    className={`${styles.messageOuterContainer} ${isUser ? styles.userMessageContainer : styles.friendMessageContainer} ${groupMessages ? styles.groupMessage : styles.singleMessage}`}
+                                                    key={messageId}
                                                 >
-                                                    {!groupMessages ? (
-                                                        <p
-                                                            className={
-                                                                styles.userName
-                                                            }
-                                                        >
-                                                            {isUser
-                                                                ? "You"
-                                                                : selectedFriend.fullName}
-                                                        </p>
-                                                    ) : (
-                                                        ""
-                                                    )}
-                                                    <p
-                                                        className={`${styles.message} ${isUser ? styles.userMessage : styles.friendMessage}`}
+                                                    <div
+                                                        className={
+                                                            styles.messageInnerContainer
+                                                        }
                                                     >
-                                                        {content}
-                                                    </p>
+                                                        {!groupMessages ? (
+                                                            <p
+                                                                className={
+                                                                    styles.userName
+                                                                }
+                                                            >
+                                                                {isUser
+                                                                    ? "You"
+                                                                    : selectedFriend.fullName}
+                                                            </p>
+                                                        ) : (
+                                                            ""
+                                                        )}
+                                                        <p
+                                                            className={`${styles.message} ${isUser ? styles.userMessage : styles.friendMessage}`}
+                                                        >
+                                                            <span
+                                                                className={
+                                                                    styles.messageText
+                                                                }
+                                                            >
+                                                                {content}
+                                                            </span>
+                                                            <span
+                                                                className={
+                                                                    styles.messageTime
+                                                                }
+                                                            >
+                                                                {sentTime}
+                                                            </span>
+                                                        </p>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                            );
-                        },
-                    )
+                                            );
+                                        })}
+                                    </div>
+                                );
+                            },
+                        )
                 ) : (
                     <p className={styles.noMessagesText}>
                         No conversation yet. Send a message

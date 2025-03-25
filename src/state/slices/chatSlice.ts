@@ -8,11 +8,13 @@ interface iChatSliceProps {
     chats: any;
     unseenMessageCounts: Record<number, number>;
     latestMessages: Record<number, string>;
+    fullyLoadedChats: Array<number>;
 }
 
 const initialState: iChatSliceProps = {
     chatsAddedAction: null,
     chats: {},
+    fullyLoadedChats: [],
     unseenMessageCounts: {},
     latestMessages: {},
 };
@@ -57,6 +59,7 @@ const chatSlice = createSlice({
                     }
                 },
             );
+            state.chats;
             state.chatsAddedAction = "append";
         },
         pushSentMessage: (
@@ -123,6 +126,15 @@ const chatSlice = createSlice({
             state.unseenMessageCounts[friendId] += 1;
             state.latestMessages[friendId] = content;
         },
+        markChatAsFullyLoaded: (
+            state: iChatSliceProps,
+            action: PayloadAction<any>,
+        ) => {
+            const { friendId } = action.payload;
+            if (!state.fullyLoadedChats.includes(friendId)) {
+                state.fullyLoadedChats.push(friendId);
+            }
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(resetState, () => {
@@ -138,6 +150,7 @@ export const {
     pushSentMessage,
     pushReceivedMessage,
     setUnseenMesssageCountAndUpdateLatestMessage,
+    markChatAsFullyLoaded,
 } = chatSlice.actions;
 
 export default chatSlice.reducer;

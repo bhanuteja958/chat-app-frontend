@@ -1,5 +1,6 @@
 import { formatDate } from "../common/helper";
 import {
+    markChatAsFullyLoaded,
     pushHistoricChatData,
     pushReceivedMessage,
     setLatestMessages,
@@ -40,7 +41,7 @@ export const historicalChatHandler = (
         return new Date(a.sentDate).getTime() - new Date(b.sentDate).getTime();
     }).forEach((message: CHAT_MESSAGE) => {
         const { content, fromId, sentDate, messageId } = message;
-        const date = formatDate(new Date(sentDate), "dd mmm yyyy");
+        const date = formatDate(new Date(sentDate), "yyyy-mm-dd");
         const time = new Date(sentDate).toLocaleTimeString("en-US", {
             hour: "numeric",
             minute: "2-digit",
@@ -57,12 +58,20 @@ export const historicalChatHandler = (
         newChatData[date].push(messageForDisplay);
     });
 
-    dispatch(
-        pushHistoricChatData({
-            friendId,
-            chatData: newChatData,
-        }),
-    );
+    if (Object.keys(newChatData).length === 0) {
+        dispatch(
+            markChatAsFullyLoaded({
+                friendId,
+            }),
+        );
+    } else {
+        dispatch(
+            pushHistoricChatData({
+                friendId,
+                chatData: newChatData,
+            }),
+        );
+    }
 };
 
 export const messageFromChattingFriendHandler = (

@@ -12,6 +12,8 @@ export const formatDate = (date: Date, format: string) => {
     switch (format) {
         case "dd mmm yyyy":
             return `${day} ${MONTHS[month].slice(0, 3)} ${year}`;
+        case "yyyy-mm-dd":
+            return `${year}-${(month + 1).toString().padStart(2, "0")}-${day.toString().padStart(2, "0")}`;
         default:
             return "";
     }
